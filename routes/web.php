@@ -14,5 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('layout.app');
+    return view('auth.login');
 });
+
+Route::middleware(['auth','verified'])->group(function () {
+    Route::get('home', function () {
+        return view('dashboard.home');
+    })->name('home')->middleware('can:dashboard');
+});
+

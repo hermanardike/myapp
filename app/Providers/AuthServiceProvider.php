@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Gate;
 class AuthServiceProvider extends ServiceProvider
 {
     public static $permission = [
-        'dashboard' => ['superadmin','admin',],
+        'dashboard' => ['admin',]
     ];
 
     /**
@@ -31,11 +31,13 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-//        Gate::define('dashboard', function(User $user) {
-//           if ($user->role == 'admin') {
-//               return true;
-//           }
-//        });
+        Gate::before(function (User $user) {
+            if ($user->role =='superadmin') {
+                return true;
+            }
+        });
+
+
         foreach (self::$permission as $action => $role) {
             Gate::define($action, function(User $user) use ($role) {
                 if (in_array($user->role, $role)){
@@ -43,5 +45,6 @@ class AuthServiceProvider extends ServiceProvider
                 }
             });
         }
+
     }
 }

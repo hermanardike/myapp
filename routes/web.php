@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,9 @@ Route::middleware(['auth','verified'])->group(function () {
     Route::get('edit-profile', function () {
         return view('dashboard.profile');
     })->name('profile.edit');
+
+    Route::resource('user', UserController::class);
+
 
 });
 

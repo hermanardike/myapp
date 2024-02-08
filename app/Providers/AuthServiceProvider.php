@@ -10,7 +10,13 @@ use Illuminate\Support\Facades\Gate;
 class AuthServiceProvider extends ServiceProvider
 {
     public static $permission = [
-        'dashboard' => ['admin',]
+        'dashboard' => ['superadmin','admin',],
+        'index-user' => ['superadmin','admin',],
+        'create-user' => ['superadmin','admin',],
+        'edit-user' => ['superadmin','admin',],
+        'update-user' => ['superadmin','admin',],
+        'destroy-user' => ['superadmin','admin',],
+
     ];
 
     /**

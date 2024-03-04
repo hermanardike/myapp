@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\FileuploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,9 @@ use App\Http\Controllers\UserController;
 Route::get('/', function () {
     return view('auth.login');
 });
+
+Route::get('/fileupload',[FileuploadController::class, 'index']);
+
 
 Route::middleware(['auth','verified'])->group(function () {
     Route::get('home', function () {

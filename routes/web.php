@@ -19,7 +19,8 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/fileupload',[FileuploadController::class, 'index']);
+Route::get('/createupload',[FileuploadController::class, 'create'])->name('create');
+Route::post('/storeuplod',[FileuploadController::class, 'store'])->name('store');
 
 
 Route::middleware(['auth','verified'])->group(function () {
@@ -32,7 +33,6 @@ Route::middleware(['auth','verified'])->group(function () {
     })->name('profile.edit');
 
     Route::resource('user', UserController::class);
-
 
 });
 

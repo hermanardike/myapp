@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('fileupload', function (Blueprint $table) {
+        Schema::create('uploadfile', function (Blueprint $table) {
             $table->id('id_upload');
             $table->string('upload_name');
             $table->string('upload_path');
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('fileupload');
+        Schema::dropIfExists('uploadfile');
     }
 };

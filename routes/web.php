@@ -21,6 +21,7 @@ Route::get('/', function () {
 
 Route::get('/createupload',[FileuploadController::class, 'create'])->name('create');
 Route::post('/storeuplod',[FileuploadController::class, 'store'])->name('store');
+Route::get('/upload',[FileuploadController::class, 'index']);
 
 
 Route::middleware(['auth','verified'])->group(function () {

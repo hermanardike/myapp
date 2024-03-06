@@ -14,9 +14,16 @@ class FileuploadController extends Controller
     }
     public function store(Request $request)
     {
-            $path =  $request->file('image')->store('public');
+//            $path =  $request->file('image')->store('public');
+//        $path =  Storage::putFile('public', $request->file('image'));
+//        $deviname = 'Dell-R720';
+//        $extension = $request->file('image')->extension();
+//        $name = 'device-name';
+//        $path = $request->file('image')->storeAs('public', $name . '.' . $extension);
+//        $path = $request->file('image')->store('surat_tugas/newDevice');
 
-            ddd($path);
+        $path = Storage::putFile('surat_tugas/newdevice', $request->file('image'));
+         ddd($path);
     }
 
 }

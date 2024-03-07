@@ -31,19 +31,29 @@
                                     <div class="card-header">
                                         <h4>Simple Summernote</h4>
                                     </div>
+                                    <form  method="POST" enctype="multipart/form-data"  action="{{route('upload.store')}}">
+                                        @csrf
                                     <div class="card-body">
-                                        <form  method="POST" enctype="multipart/form-data"  action="{{route('upload.store')}}">
-                                            @csrf
                                         <div class="form-group row mb-4">
                                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">upload_name</label>
                                             <div class="col-sm-12 col-md-7">
-                                                <input type="text" name="upload_name" class="form-control">
+                                                <input type="text"  class="form-control @error('upload_name') is-invalid @enderror" name="upload_name" value="{{old('upload_name')}}">
+                                                @error('upload_name')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="form-group row mb-4">
                                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">upload_image</label>
                                             <div class="col-sm-12 col-md-7">
-                                                <input type="file" class="form-control" name="image">
+                                                <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" value="{{old('image')}}">
+                                                @error('image')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                                @enderror
                                             </div>
                                         </div>
 
@@ -53,8 +63,8 @@
                                                 <button class="btn btn-primary">Publish</button>
                                             </div>
                                         </div>
-                                        </form>
                                     </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -63,7 +73,9 @@
             </div>
         </div>
     </section>
-@endsection
+
+    @endsection
+
 @section('sidebar')
     @parent
     <li class="menu-header">Starter</li>
@@ -76,5 +88,6 @@
         </ul>
     </li>
 @endsection
+
 
 

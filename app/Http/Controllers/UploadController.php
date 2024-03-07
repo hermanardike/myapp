@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Uploadfile;
+use GuzzleHttp\Promise\Create;
 use Illuminate\Http\Request;
 
 class UploadController extends Controller
@@ -25,7 +26,7 @@ class UploadController extends Controller
      */
     public function create()
     {
-        //
+        return  view('upload.create');
     }
 
     /**
@@ -36,7 +37,23 @@ class UploadController extends Controller
      */
     public function store(Request $request)
     {
-        //
+         if($request->hasFile('image'))
+         {
+             $request->file('image')->store('public');
+
+             Uploadfile::create([
+                 'upload_name' => $request->upload_name,
+                 'upload_path' => $request->file('image')->hashName(),
+             ]);
+         }
+         else {
+             Uploadfile::create([
+                 'upload_name' => $request->upload_name,
+                 'upload_path' => $request->upload_path,
+             ]);
+         }
+
+        return redirect()->route('upload.index');
     }
 
     /**

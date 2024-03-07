@@ -18,7 +18,7 @@ class UploadFileFactory extends Factory
     {
         return [
             'upload_name' => $this->faker->name(),
-            'upload_path' => 'storage/default.jpg',
+            'upload_path' => 'default.jpg',
         ];
     }
 }

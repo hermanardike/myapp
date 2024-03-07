@@ -65,7 +65,7 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <image src="{{ $item->upload_path }}" alt="{{$item->upload_path}}"></image>
+                                             <img src="{{asset('storage/'. $item->upload_path)}}" alt="{{$item->upload_name}}">
                                             </td>
 
                                         </tr>

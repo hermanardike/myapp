@@ -19,6 +19,9 @@
             <li class="nav-item dropdown">
                 <a href="{{route('user.index')}}" class="nav-link "><i class="fas fa-users"></i><span>User Management</span></a>
             </li>
+            <li class="nav-item dropdown">
+                <a href="{{route('upload.index')}}" class="nav-link "><i class="fas fa-users"></i><span>Upload Management</span></a>
+            </li>
         @endcan
 
         @show

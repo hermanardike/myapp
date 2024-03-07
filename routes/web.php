@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\FileuploadController;
+use App\Http\Controllers\UploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,11 +19,6 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/createupload',[FileuploadController::class, 'create'])->name('create');
-Route::post('/storeuplod',[FileuploadController::class, 'store'])->name('store');
-Route::get('/upload',[FileuploadController::class, 'index']);
-
-
 Route::middleware(['auth','verified'])->group(function () {
     Route::get('home', function () {
         return view('dashboard.home');
@@ -34,6 +29,7 @@ Route::middleware(['auth','verified'])->group(function () {
     })->name('profile.edit');
 
     Route::resource('user', UserController::class);
+    Route::resource('upload',UploadController::class);
 
 });
 

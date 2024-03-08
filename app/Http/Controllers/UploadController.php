@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Uploadfile;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UploadController extends Controller
 {
@@ -41,23 +42,14 @@ class UploadController extends Controller
             'upload_name' => 'required',
             'image' =>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+        //Untuk Method Upload Imagenya
+        $request->file('image')->store('public');
 
-         if($request->hasFile('image'))
-         {
-             $request->file('image')->store('public');
-
-             Uploadfile::create([
+        // Untuk Method Create instert into Database
+        Uploadfile::create([
                  'upload_name' => $request->upload_name,
                  'upload_path' => $request->file('image')->hashName(),
              ]);
-         }
-         else {
-             Uploadfile::create([
-                 'upload_name' => $request->upload_name,
-                 'upload_path' => $request->upload_path,
-             ]);
-         }
-
         return redirect()->route('upload.index');
     }
 
@@ -69,7 +61,8 @@ class UploadController extends Controller
      */
     public function show($id)
     {
-        //
+        $upload = Uploadfile::find($id);
+        return view('upload.show',compact('upload'));
     }
 
     /**
@@ -80,7 +73,8 @@ class UploadController extends Controller
      */
     public function edit($id)
     {
-        //
+        $upload = Uploadfile::find($id);
+        return view('upload.edit',compact('upload'));
     }
 
     /**
@@ -92,7 +86,28 @@ class UploadController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $request->validate([
+            'upload_name' => 'required',
+            'image' =>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
+        ]);
+        // Query data id database
+        $upload = Uploadfile::find($id);
+
+        // Mengambil data old upload  untuk di hapus
+        $oldImage = $upload->upload_path;
+
+        // Untuk Method Upload Imagenya
+        $request->file('image')->store('public');
+        $upload->upload_name = $request->upload_name;
+        $upload->upload_path = $request->file('image')->hashName();
+        $upload->save();
+
+        // Metode untuk menghapus data image yang lama
+        Storage::disk('public')->delete($oldImage);
+        return redirect()->route('upload.index');
+
     }
 
     /**
@@ -103,6 +118,10 @@ class UploadController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $upload = Uploadfile::find($id);
+        $upload_path = $upload->upload_path;
+        $upload->delete();
+        Storage::disk('public')->delete($upload_path);
+        return redirect()->route('upload.index');
     }
 }

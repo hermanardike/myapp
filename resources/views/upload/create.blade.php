@@ -28,16 +28,13 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="card">
-                                    <div class="card-header">
-                                        <h4>Simple Summernote</h4>
-                                    </div>
                                     <form  method="POST" enctype="multipart/form-data"  action="{{route('upload.store')}}">
                                         @csrf
                                     <div class="card-body">
                                         <div class="form-group row mb-4">
                                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">upload_name</label>
                                             <div class="col-sm-12 col-md-7">
-                                                <input type="text"  class="form-control @error('upload_name') is-invalid @enderror" name="upload_name" value="{{old('upload_name')}}">
+                                                <input type="text"  class="form-control @error('upload_name') is-invalid @enderror" name="upload_name" value="{{old('upload_name') }}">
                                                 @error('upload_name')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}

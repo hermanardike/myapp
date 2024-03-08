@@ -57,11 +57,17 @@
                                             </td>
                                             <td>{{ $item->upload_name }}
                                                 <div class="table-links">
-                                                    <a href="#">View</a>
+                                                    <a href="/upload/{{$item->id_upload}}">View</a>
                                                     <div class="bullet"></div>
-                                                    <a href="#">Edit</a>
+                                                    <a href="{{route('upload.edit', $item->id_upload)}}">Edit</a>
                                                     <div class="bullet"></div>
-                                                    <a href="#" class="text-danger">Trash</a>
+                                                    <a href="#"
+                                                       onclick="event.preventDefault(); document.getElementById('delete').submit()">
+                                                        <i class="fas fa-info"></i> Trash </a>
+                                                    <form id="delete" action="{{ route('upload.destroy', $item->id_upload) }}" method="POST" style="display: none;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
                                                 </div>
                                             </td>
                                             <td>

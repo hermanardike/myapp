@@ -6,6 +6,7 @@ use App\Models\Uploadfile;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class UploadController extends Controller
 {
@@ -16,7 +17,8 @@ class UploadController extends Controller
      */
     public function index()
     {
-        $upload = Uploadfile::paginate('5');
+
+        $upload = Uploadfile::where('id_user', '=', Auth::user()->id)->paginate('5');
         return  view('upload.index',compact('upload'));
     }
 

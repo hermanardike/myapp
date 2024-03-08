@@ -19,6 +19,7 @@ class UploadFileFactory extends Factory
         return [
             'upload_name' => $this->faker->name(),
             'upload_path' => 'default.jpg',
+            'id_user' => '12',
         ];
     }
 }

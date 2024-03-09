@@ -51,6 +51,7 @@ class UploadController extends Controller
         Uploadfile::create([
                  'upload_name' => $request->upload_name,
                  'upload_path' => $request->file('image')->hashName(),
+                 'id_user' => Auth::user()->id,
              ]);
         return redirect()->route('upload.index');
     }
@@ -104,6 +105,8 @@ class UploadController extends Controller
         $request->file('image')->store('public');
         $upload->upload_name = $request->upload_name;
         $upload->upload_path = $request->file('image')->hashName();
+        $upload->id_user =  Auth::user()->id;
+
         $upload->save();
 
         // Metode untuk menghapus data image yang lama
@@ -120,10 +123,15 @@ class UploadController extends Controller
      */
     public function destroy($id)
     {
-        $upload = Uploadfile::find($id);
-        $upload_path = $upload->upload_path;
-        $upload->delete();
-        Storage::disk('public')->delete($upload_path);
-        return redirect()->route('upload.index');
+
+       $upload =  Uploadfile::find($id);
+
+       if ($upload->upload_path != 'default.jpg')
+       {
+           Storage::disk('public')->delete($upload->upload_path);
+       }
+       $upload->delete();
+
+       return redirect()->route('upload.index');
     }
 }

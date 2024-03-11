@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UploadController;
+use App\Http\Controllers\FileponController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,5 +32,7 @@ Route::middleware(['auth','verified'])->group(function () {
     Route::resource('user', UserController::class);
     Route::resource('upload',UploadController::class);
 
+    Route::post('file-pond', [FileponController::class, 'store'])->name('filepond.store');
+    Route::delete('file-pond', [FileponController::class, 'destroy'])->name('filepond.destroy');
 });
 

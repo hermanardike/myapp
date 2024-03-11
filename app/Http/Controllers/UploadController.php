@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Temporary;
 use App\Models\Uploadfile;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Http\Request;
@@ -45,21 +46,38 @@ class UploadController extends Controller
     {
         $request->validate([
             'upload_name' => 'required',
-            'image' =>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' =>'required|string',
         ]);
+
+
         //Untuk Method Upload Imagenya
-        $request->file('image')->store('public/' . Auth::user()->id);
-        // Resize Image
-        $img= Image::make(storage_path('app/public/'. Auth::user()->id . '/' .  $request->file('image')->hashName()))
+//        $request->file('image')->store('public/' . Auth::user()->id);
+
+        //ambil details temporary file berdasarkan foldername
+        $tmp =  Temporary::where('foldername', $request->image)->first();
+
+        // Resize Image Using Interevention
+        $img= Image::make(storage_path('app/tmp/'. $tmp->foldername . '/' .  $tmp->filename))
         ->resize(50, 50);
+
         // Save image to thumbnail folder
-        Storage::disk('public')->put(Auth::user()->id .'/thumbnails/' . $request->file('image')->hashName(), $img->encode());
+        Storage::disk('public')
+            ->put(Auth::user()->id . '/thumbnails/' . $tmp->filename, $img->encode());
+
+        // COpy file original from tmp to public
+        Storage::copy('tmp/' . $tmp->foldername . '/' . $tmp->filename, 'public/' .  Auth::user()->id . '/' . $tmp->filename);
+
         // Untuk Method Create instert into Database
         Uploadfile::create([
                  'upload_name' => $request->upload_name,
-                 'upload_path' => $request->file('image')->hashName(),
+                 'upload_path' => $tmp->filename,
                  'id_user' => Auth::user()->id,
              ]);
+
+        // Delete temporary file
+        Storage::deleteDirectory('tmp/' . $tmp->foldername);
+        $tmp->delete();
+
         return redirect()->route('upload.index');
     }
 
@@ -98,7 +116,7 @@ class UploadController extends Controller
     {
         $request->validate([
             'upload_name' => 'required',
-            'image' =>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' =>'required|string',
         ]);
         // Query data id database
         $upload = Uploadfile::find($id);
@@ -106,23 +124,36 @@ class UploadController extends Controller
         // Mengambil data old upload  untuk di hapus
         $oldImage = $upload->upload_path;
 
-        // Method Mengambil data Imagenya
-        $request->file('image')->store('public/' . Auth::user()->id);
+//        // Method Mengambil data Imagenya
+//        $request->file('image')->store('public/' . Auth::user()->id);
 
-        // Method Resize Image mengambil dan resize
-        $img= Image::make(storage_path('app/public/'. Auth::user()->id . '/' .  $request->file('image')->hashName()))
+        //ambil details temporary file berdasarkan foldername
+        $tmp =  Temporary::where('foldername', $request->image)->first();
+
+        // Resize Image Using Interevention
+        $img= Image::make(storage_path('app/tmp/'. $tmp->foldername . '/' .  $tmp->filename))
             ->resize(50, 50);
+
+        // Save image to thumbnail folder
         Storage::disk('public')
-            ->put(Auth::user()->id .'/thumbnails/' . $request->file('image')->hashName(), $img->encode());
+            ->put(Auth::user()->id . '/thumbnails/' . $tmp->filename, $img->encode());
+
+        // COpy file original from tmp to public
+        Storage::copy('tmp/' . $tmp->foldername . '/' . $tmp->filename, 'public/' .  Auth::user()->id . '/' . $tmp->filename);
 
         // method untuk update data insert into database
         $upload->upload_name = $request->upload_name;
-        $upload->upload_path = $request->file('image')->hashName();
+        $upload->upload_path = $tmp->filename;
         $upload->id_user =  Auth::user()->id;
         $upload->save();
         // Metode untuk menghapus data image yang lama
-        Storage::disk('public')->delete(Auth::user()->id . '/' .  $oldImage);
-        Storage::disk('public')->delete(Auth::user()->id . '/thumbnails/' .  $oldImage);
+        if ($oldImage != 'default.jpg'){
+            Storage::disk('public')->delete(Auth::user()->id . '/' .  $oldImage);
+            Storage::disk('public')->delete(Auth::user()->id . '/thumbnails/' .  $oldImage);
+        }
+        // Delete temporary file
+        Storage::deleteDirectory('tmp/' . $tmp->foldername);
+        $tmp->delete();
         return redirect()->route('upload.index');
     }
 

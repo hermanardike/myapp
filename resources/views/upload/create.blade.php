@@ -45,12 +45,7 @@
                                         <div class="form-group row mb-4">
                                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">upload_image</label>
                                             <div class="col-sm-12 col-md-7">
-                                                <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" value="{{old('image')}}">
-                                                @error('image')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                                @enderror
+                                                <input type="file" name="image" >
                                             </div>
                                         </div>
 
@@ -85,6 +80,34 @@
         </ul>
     </li>
 @endsection
+
+@push('customCss')
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+@endpush
+
+@push('customJS')
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    <script>
+        FilePond.registerPlugin(FilePondPluginFileValidateType);
+        const inputElement = document.querySelector('input[type="file"]');
+
+        const pond = FilePond.create( inputElement );
+
+        FilePond.setOptions({
+            acceptedFileTypes: ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'],
+            server: {
+                process : '/file-pond',
+                revert : '/file-pond',
+                headers: {
+                    'accept' : 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            }
+        });
+
+    </script>
+@endpush
 
 
 

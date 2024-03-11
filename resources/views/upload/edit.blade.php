@@ -56,7 +56,7 @@
                                                     </div>
                                                     @enderror
                                                     <div class="owl-carousel owl-theme slider" id="slider1">
-                                                        <div><img alt="image" src="{{asset('storage/'. $upload->upload_path)}}"></div>
+                                                        <div><img alt="image" src="{{asset('storage/' . Auth::user()->id. '/' . $upload->upload_path)}}"></div>
                                                     </div>
                                                 </div>
                                             </div>

@@ -61,7 +61,7 @@
                                                     <div class="bullet"></div>
                                                     <a href="{{route('upload.edit', $item->id_upload)}}">Edit</a>
                                                     <div class="bullet"></div>
-                                                    <a href="#"
+                                                    <a href="{{$item->id_upload}}"
                                                        onclick="event.preventDefault(); document.getElementById('delete').submit()">
                                                         <i class="fas fa-info"></i> Trash </a>
                                                     <form id="delete" action="{{ route('upload.destroy', $item->id_upload) }}" method="POST" style="display: none;">
@@ -71,7 +71,12 @@
                                                 </div>
                                             </td>
                                             <td>
-                                             <img src="{{asset('storage/'. $item->upload_path)}}" alt="{{$item->upload_name}}">
+                                                @if($item->upload_path == 'default.jpg')
+                                                    <img src="{{asset('storage/'. $item->upload_path)}}" alt="{{$item->upload_name}}">
+                                                    @else
+                                                    <img src="{{asset('storage/' . Auth::user()->id . '/thumbnails/'. $item->upload_path)}}" alt="{{$item->upload_name}}">
+                                                @endif
+
                                             </td>
 
                                         </tr>
